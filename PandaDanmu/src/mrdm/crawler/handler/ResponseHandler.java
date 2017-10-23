@@ -25,6 +25,8 @@ public class ResponseHandler {
     private static final String DANMU_NICKNAME = "\"nickName\":\"(.*?)\"";
     private static final String DANMU_USERLEVEL ="\"level\":\"(.*?)\"";
     private static final String DANMU_CONTENT ="\"content\":\"(.*?)\"" ;
+    private static final String DANMU_UID = "\"rid\":\"(.*?)\"";
+    private static final String DANMU_ROOMID = "\"toroom\":\"(.*?)\"";
 
 
     public static Matcher getMatcher(String content, String regex) {
@@ -83,14 +85,18 @@ public class ResponseHandler {
 */
     public static Danmu danmuHandle(String content){
         String nickName;
+        int uid;
         int level;
         String danMuContent;
+        int roomid;
 
         nickName = getMatcherString(content,DANMU_NICKNAME);
+        uid = Integer.parseInt(getMatcherString(content,DANMU_UID));
         level = Integer.parseInt(getMatcherString(content,DANMU_USERLEVEL));
         danMuContent = getMatcherString(content,DANMU_CONTENT);
+        roomid = Integer.parseInt(getMatcherString(content,DANMU_ROOMID));
 
-        return new Danmu(nickName,level,danMuContent);
+        return new Danmu(nickName,uid,level,danMuContent,roomid);
 
 
     }

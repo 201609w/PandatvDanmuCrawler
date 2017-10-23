@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class DateUtil {
 //编辑时间格式
-    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 // 返回日期+时间字符串
     public static String now(){return formatter.format(new Date()); }
@@ -19,7 +19,7 @@ public class DateUtil {
 
     public static void main(String[] args){
 
-        LogUtil.i(new Date().toString());
+        LogUtil.i(now());
 
     }
 }

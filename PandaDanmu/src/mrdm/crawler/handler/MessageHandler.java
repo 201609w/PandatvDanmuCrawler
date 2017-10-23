@@ -48,7 +48,7 @@ public class MessageHandler {
         }
 
         int len;
-        byte[] buffer = new byte[8 * 1024];
+        byte[] buffer = new byte[10*1024];
         InputStream in = socket.getInputStream();
 
         while (socket.isConnected() //链接结束

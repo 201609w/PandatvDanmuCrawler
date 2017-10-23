@@ -2,6 +2,8 @@ package mrdm.crawler.Thread;
 
 import mrdm.crawler.bean.Danmu;
 import mrdm.crawler.bean.ServerAddr;
+import mrdm.crawler.conf.Config;
+import mrdm.crawler.db.DanmuDao;
 import mrdm.crawler.handler.MessageHandler;
 import mrdm.crawler.handler.ResponseHandler;
 import mrdm.crawler.util.HttpUtil;
@@ -9,6 +11,7 @@ import mrdm.crawler.util.LogUtil;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,22 +56,32 @@ public class CrawlerThread implements Runnable {
 
     private MessageHandler.OnReceiveListener  danmuListener= new MessageHandler.OnReceiveListener(){
 
-        Danmu danmu;
+        List<Danmu> danmuList = new ArrayList<Danmu>();
 
         @Override
-        public void onReceive(String response){
+        public void onReceive(String response) {
 
             LogUtil.d(response);
-//          弹幕类型开头为"type":1，禁言信息为"type"：100末尾包含有"type"：1需要剔除
-            if(!response.contains("\"type\":\"1\"")||response.contains("\"type\":\"100\""))
+//          弹幕类型开头为"type":1
+            if (!response.contains("\"type\":\"1\""))
                 return;
-            try {
-                danmu = ResponseHandler.danmuHandle(response);
-            }catch (Exception e){
-                LogUtil.e(response);
+            String[] danmuss = response.split("\"type\":\"1\"");
+                try {
+                    for (int i = 1; i < danmuss.length; i++) {
+                   Danmu danmu = ResponseHandler.danmuHandle(danmuss[i]);
+                    LogUtil.i(danmu.toString());
+                    if(Config.DB_ENABLE) {
+                        danmuList.add(danmu);
+                        if (danmuList.size() >= 20 && DanmuDao.saveDanmu(danmuList)) {
+                            LogUtil.i("保存到数据库...");
+                            danmuList.clear();
+                        }
+                    }
+                    }
+                } catch (Exception e) {
+                    LogUtil.e(response);
+                }
             }
-            LogUtil.i(danmu.toString());
-        }
 
     };
 

@@ -15,6 +15,11 @@ public class Config {
      public static final String propertiesName = "conf.properties";
      public static boolean DEBUG_MODE = true;
      public static boolean loadSuccess = false;
+     public static boolean DB_ENABLE = false;
+     public static String DB_DIRVER = null;
+     public static String DB_URL = null;
+     public static String DB_USERNAME = null;
+     public static String DB_PASSWORD = null;
      public static Map<String,String> ROOM_MAP = new HashMap<>();
 
      static{
@@ -25,6 +30,11 @@ public class Config {
              properties.load(in);
 
              DEBUG_MODE = Boolean.parseBoolean(properties.getProperty("debug"));
+             DB_ENABLE =  Boolean.parseBoolean(properties.getProperty("db.enable"));
+             DB_DIRVER = properties.getProperty("db.dirver");
+             DB_URL = properties.getProperty("db.url");
+             DB_USERNAME = properties.getProperty("db.username");
+             DB_PASSWORD = properties.getProperty("db.password");
 
              Set<Object> objects = properties.keySet();
              for (Object object:objects){
